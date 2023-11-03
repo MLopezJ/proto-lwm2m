@@ -1,7 +1,7 @@
 import type { MeasurementType, SenMLType } from './SenMLSchema'
 import { timestampResources } from '../lwm2m/timestampResources.js'
 
-type LwM2MObject = {
+export type LwM2MObject = {
 	ObjectID: number
 	ObjectVersion: string
 	Resources: Record<number, string | number | boolean | Date>
