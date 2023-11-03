@@ -1,0 +1,61 @@
+name: Build and Release
+
+permissions:
+  contents: write
+  issues: write
+
+on:
+  push:
+
+env:
+  NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+  main:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: true
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20.x"
+
+      - name: Keep npm cache around to speed up installs
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.OS }}-build-${{ hashFiles('**/package-lock.json') }}
+
+      - name: Install dependencies
+        run: npm ci --no-audit
+
+      - name: Check LwM2M definitions
+        run: |
+          sudo apt-get install -y libxml2-utils
+          npx tsx lwm2m/check-lwm2m-rules.ts
+
+      - name: Generate LwM2M code
+        run: |
+          npx tsx generator/lwm2m.ts
+
+      - name: Check model data
+        run: |
+          npx tsx models/check-model-rules.ts
+
+      - name: Generate code
+        run: |
+          npx tsx generator/models.ts
+
+      - name: Run tests
+        run: npm test
+
+      - name: Run example
+        run: npx tsx example.ts
+
+      - name: Semantic release
+        run: npx semantic-release
