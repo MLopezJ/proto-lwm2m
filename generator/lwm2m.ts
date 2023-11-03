@@ -1,5 +1,5 @@
 import chalk from 'chalk'
-import { mkdir, readFile, readdir, writeFile } from 'node:fs/promises'
+import { readFile, readdir, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { unwrapNestedArray } from '../lwm2m/unwrapNestedArray.js'
 import xml2js from 'xml2js'
