@@ -9,6 +9,8 @@ import { getCodeBlock } from '../markdown/getCodeBlock.js'
 import { getFrontMatter } from '../markdown/getFrontMatter.js'
 import { validateSenML } from '../senml/validateSenML.js'
 import { stripEmptyValues } from '../senml/stripEmptyValues.js'
+import { validateLwM2M } from './validateLwM2M.js'
+import { Geolocation_14201 } from 'lwm2m/14201_typebox.js'
 
 console.log(chalk.gray('Models rules check'))
 console.log('')
@@ -98,7 +100,25 @@ for (const model of await readdir(modelsDir)) {
 				chalk.gray('The transformation result matches the example'),
 			)
 
-			senMLtoLwM2M(maybeValidSenML.value)
+			// WIP: implementation in progress
+			// TODO: make it generic
+			if (senMLtoLwM2M(maybeValidSenML.value)[0]?.ObjectID === 14201) {
+				const maybeValidLwM2M = validateLwM2M(Geolocation_14201)(
+					senMLtoLwM2M(maybeValidSenML.value)[0],
+				)
+				if ('errors' in maybeValidLwM2M) {
+					console.error(maybeValidLwM2M.errors)
+					throw new Error(
+						'The LwM2M object must follow LwM2M schema definition',
+					)
+				} else {
+					console.log(
+						' ',
+						chalk.green('✔'),
+						chalk.gray('SenML object is valid LwM2M'),
+					)
+				}
+			}
 			// FIXME: validate LwM2M (see #)
 		}
 	}

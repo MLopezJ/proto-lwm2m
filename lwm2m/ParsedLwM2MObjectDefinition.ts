@@ -1,3 +1,17 @@
+export type Resource = {
+	$: {
+		ID: string // e.g. '0'
+	}
+	Name: string // e.g. 'Latitude'
+	Operations: 'R'
+	MultipleInstances: 'Single'
+	Mandatory: 'Optional' | 'Mandatory'
+	Type: 'String' | 'Integer' | 'Float' | 'Boolean' | 'Opaque' | 'Time'
+	RangeEnumeration: string // e.g. ''
+	Units: string // e.g. 'lat'
+	Description: string // e.g. 'The decimal notation of latitude, e.g. -43.5723 [World Geodetic System 1984].'
+}
+
 export type ParsedLwM2MObjectDefinition = {
 	$: { ObjectType: 'MODefinition' }
 	Name: string // e.g. 'Location'
@@ -8,19 +22,7 @@ export type ParsedLwM2MObjectDefinition = {
 	MultipleInstances: 'Multiple'
 	Mandatory: 'Optional'
 	Resources: {
-		Item: {
-			$: {
-				ID: string // e.g. '0'
-			}
-			Name: string // e.g. 'Latitude'
-			Operations: 'R'
-			MultipleInstances: 'Single'
-			Mandatory: 'Optional' | 'Mandatory'
-			Type: 'String' | 'Integer' | 'Float' | 'Boolean' | 'Opaque' | 'Time'
-			RangeEnumeration: string // e.g. ''
-			Units: string // e.g. 'lat'
-			Description: string // e.g. 'The decimal notation of latitude, e.g. -43.5723 [World Geodetic System 1984].'
-		}[]
+		Item: Resource[]
 	}
 	Description2: string // e.g. ''
 }

@@ -117,4 +117,5 @@ npm test
 ```bash
 npx tsx generator/lwm2m.ts
 npx tsx generator/models.ts
+npx tsx generator/typebox.ts
 ```
